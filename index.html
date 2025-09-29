@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Marker + YouTube 影片</title>
+  <title>AR Marker + YouTube 撥放</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
@@ -10,13 +10,13 @@
 
     #hint {
       position: fixed;
-      top: 40%;
+      top: 10%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
+      transform: translateX(-50%);
+      font-size: 20px;
       color: #ffffff;
       background: rgba(0,0,0,0.7);
-      padding: 20px 30px;
+      padding: 10px 20px;
       border-radius: 10px;
       text-align: center;
       z-index: 100;
@@ -24,14 +24,26 @@
     }
 
     #playBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 18px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 16px;
       background-color: #ff0000;
       color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+    }
+
+    iframe {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      height: 50%;
+      border: none;
+      display: none; /* 初始隱藏 */
+      z-index: 101;
     }
   </style>
 </head>
@@ -43,12 +55,17 @@
     <button id="playBtn">播放影片</button>
   </div>
 
-  <!-- A-Frame + AR.js -->
+  <!-- YouTube 影片 iframe -->
+  <iframe id="ytPlayer" 
+          src="https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1" 
+          allow="autoplay; encrypted-media" allowfullscreen>
+  </iframe>
+
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
 
     <!-- 自訂 marker -->
     <a-marker type="pattern" url="assets/洗衣機.patt" id="customMarker">
-      <!-- 可以替換成任何 3D 物件或文字 -->
+      <!-- 可以放 3D 物件或文字 -->
       <a-box color="blue" position="0 0.25 0"></a-box>
     </a-marker>
 
@@ -58,6 +75,7 @@
   <script>
     const hint = document.getElementById('hint');
     const playBtn = document.getElementById('playBtn');
+    const ytPlayer = document.getElementById('ytPlayer');
     const customMarker = document.getElementById('customMarker');
 
     // 偵測到 marker 顯示提示文字
@@ -68,11 +86,13 @@
     // 失去 marker 隱藏提示文字
     customMarker.addEventListener('markerLost', () => {
       hint.style.display = 'none';
+      ytPlayer.style.display = 'none'; // 影片隱藏
     });
 
     // 點擊按鈕播放影片
     playBtn.addEventListener('click', () => {
-      window.open("https://www.youtube.com/watch?v=cci1yhDeOjs", "_blank");
+      ytPlayer.style.display = 'block'; // 顯示影片
+      hint.style.display = 'none';       // 隱藏提示文字
     });
   </script>
 
