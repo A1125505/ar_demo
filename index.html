@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR QR + YouTube 範例</title>
+  <title>AR Marker + YouTube 影片</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
@@ -20,6 +20,7 @@
       border-radius: 10px;
       text-align: center;
       z-index: 100;
+      display: none; /* 初始隱藏 */
     }
 
     #playBtn {
@@ -32,48 +33,46 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
-    iframe {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      height: 50%;
-      border: none;
-      display: none;
-      z-index: 101;
-    }
   </style>
 </head>
 <body>
 
   <!-- 提示文字 -->
   <div id="hint">
-    請以正面對準設備<br>
-    <button id="playBtn">點擊播放影片</button>
+    點擊播放教學影片<br>
+    <button id="playBtn">播放影片</button>
   </div>
 
-  <!-- YouTube 影片 -->
-  <iframe id="ytPlayer" src="https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
-  <!-- A-Frame + AR.js（可保留 marker 互動，但暫時不顯示影片） -->
+  <!-- A-Frame + AR.js -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
-    <a-marker preset="hiro" visible="false">
-      <a-box color="red" position="0 0.25 0"></a-box>
+
+    <!-- 自訂 marker -->
+    <a-marker type="pattern" url="assets/洗衣機.patt" id="customMarker">
+      <!-- 可以替換成任何 3D 物件或文字 -->
+      <a-box color="blue" position="0 0.25 0"></a-box>
     </a-marker>
+
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
     const hint = document.getElementById('hint');
     const playBtn = document.getElementById('playBtn');
-    const ytPlayer = document.getElementById('ytPlayer');
+    const customMarker = document.getElementById('customMarker');
+
+    // 偵測到 marker 顯示提示文字
+    customMarker.addEventListener('markerFound', () => {
+      hint.style.display = 'block';
+    });
+
+    // 失去 marker 隱藏提示文字
+    customMarker.addEventListener('markerLost', () => {
+      hint.style.display = 'none';
+    });
 
     // 點擊按鈕播放影片
     playBtn.addEventListener('click', () => {
-      ytPlayer.style.display = 'block';  // 顯示影片
-      hint.style.display = 'none';       // 隱藏提示文字
+      window.open("https://www.youtube.com/watch?v=cci1yhDeOjs", "_blank");
     });
   </script>
 
