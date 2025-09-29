@@ -8,6 +8,7 @@
   <style>
     body { margin:0; overflow:hidden; font-family:sans-serif; }
 
+    /* 提示文字與影片容器 */
     #hint {
       position: fixed;
       top: 10%;
@@ -16,7 +17,7 @@
       font-size: 20px;
       color: #ffffff;
       background: rgba(0,0,0,0.7);
-      padding: 10px 20px;
+      padding: 15px 25px;
       border-radius: 10px;
       text-align: center;
       z-index: 100;
@@ -49,9 +50,9 @@
 </head>
 <body>
 
-  <!-- 提示文字 -->
+  <!-- 提示文字 + 按鈕 -->
   <div id="hint">
-    點擊播放影片<br>
+    這是一段敘述文字，請點擊下方播放影片<br>
     <button id="playBtn">播放影片</button>
   </div>
 
@@ -61,38 +62,39 @@
           allow="autoplay; encrypted-media" allowfullscreen>
   </iframe>
 
+  <!-- A-Frame + AR.js -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
-
     <!-- 內建 HIRO marker -->
     <a-marker preset="hiro" id="hiroMarker">
-      <!-- 可以放 3D 物件示意 -->
+      <!-- 可放 3D 物件作示意 -->
       <a-box color="green" position="0 0.25 0"></a-box>
     </a-marker>
-
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    const hint = document.getElementById('hint');
-    const playBtn = document.getElementById('playBtn');
-    const ytPlayer = document.getElementById('ytPlayer');
-    const hiroMarker = document.getElementById('hiroMarker');
+    document.addEventListener("DOMContentLoaded", () => {
+      const hint = document.getElementById('hint');
+      const playBtn = document.getElementById('playBtn');
+      const ytPlayer = document.getElementById('ytPlayer');
+      const hiroMarker = document.getElementById('hiroMarker');
 
-    // 偵測到 HIRO marker 顯示提示文字
-    hiroMarker.addEventListener('markerFound', () => {
-      hint.style.display = 'block';
-    });
+      // 偵測到 HIRO marker 顯示文字
+      hiroMarker.addEventListener('markerFound', () => {
+        hint.style.display = 'block';
+      });
 
-    // 失去 marker 隱藏提示文字與影片
-    hiroMarker.addEventListener('markerLost', () => {
-      hint.style.display = 'none';
-      ytPlayer.style.display = 'none';
-    });
+      // 失去 marker 隱藏文字與影片
+      hiroMarker.addEventListener('markerLost', () => {
+        hint.style.display = 'none';
+        ytPlayer.style.display = 'none';
+      });
 
-    // 點擊按鈕播放影片
-    playBtn.addEventListener('click', () => {
-      ytPlayer.style.display = 'block';
-      hint.style.display = 'none';
+      // 點擊按鈕播放影片
+      playBtn.addEventListener('click', () => {
+        ytPlayer.style.display = 'block';
+        hint.style.display = 'none';
+      });
     });
   </script>
 
