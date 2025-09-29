@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AR.js Video Demo</title>
+  <!-- A-Frame (3D + DOM) -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <!-- AR.js for A-Frame -->
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <style> body { margin:0; overflow:hidden; } #playHint { position:fixed; left:0; right:0; bottom:20px; text-align:center; font-size:18px; }</style>
+</head>
+<body>
+  <div id="playHint">先點一下畫面以允許影片播放（若影片未播放）。</div>
+
+  <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+    <!-- 使用內建 HIRO marker (方便測試) -->
+    <a-marker preset="hiro">
+      <!-- 影片素材請放 assets/demo.mp4，下面示範把影片作為 plane (螢幕) -->
+      <a-video id="tutorialVideo" src="assets/demo.mp4" width="1.6" height="0.9" position="0 0.45 0" rotation="-90 0 0" autoplay="false" loop="true" playsinline="true"></a-video>
+    </a-marker>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    // 瀏覽器通常要求使用者互動後才能播放有聲音的影片
+    const hint = document.getElementById('playHint');
+    function initPlay() {
+      const videoEl = document.querySelector('#tutorialVideo').components.material.material.map.image;
+      // a-video 在 A-Frame 底層會建立一個 HTMLVideoElement 為 texture
+      if (videoEl && videoEl.play) {
+        videoEl.muted = false;    // 若要自動播放，可先設定 muted = true
+        videoEl.play().catch(e => {
+          console.log('video play error', e);
+        });
+      }
+      hint.style.display = 'none';
+      window.removeEventListener('touchstart', initPlay);
+      window.removeEventListener('click', initPlay);
+    }
+    window.addEventListener('touchstart', initPlay);
+    window.addEventListener('click', initPlay);
+  </script>
+</body>
+</html>
