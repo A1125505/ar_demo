@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Marker + YouTube 撥放</title>
+  <title>AR Hiro Marker + YouTube 撥放</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
@@ -51,7 +51,7 @@
 
   <!-- 提示文字 -->
   <div id="hint">
-    點擊播放教學影片<br>
+    點擊播放影片<br>
     <button id="playBtn">播放影片</button>
   </div>
 
@@ -63,10 +63,10 @@
 
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
 
-    <!-- 自訂 marker -->
-    <a-marker type="pattern" url="assets/洗衣機.patt" id="customMarker">
-      <!-- 可以放 3D 物件或文字 -->
-      <a-box color="blue" position="0 0.25 0"></a-box>
+    <!-- 內建 HIRO marker -->
+    <a-marker preset="hiro" id="hiroMarker">
+      <!-- 可以放 3D 物件示意 -->
+      <a-box color="green" position="0 0.25 0"></a-box>
     </a-marker>
 
     <a-entity camera></a-entity>
@@ -76,23 +76,23 @@
     const hint = document.getElementById('hint');
     const playBtn = document.getElementById('playBtn');
     const ytPlayer = document.getElementById('ytPlayer');
-    const customMarker = document.getElementById('customMarker');
+    const hiroMarker = document.getElementById('hiroMarker');
 
-    // 偵測到 marker 顯示提示文字
-    customMarker.addEventListener('markerFound', () => {
+    // 偵測到 HIRO marker 顯示提示文字
+    hiroMarker.addEventListener('markerFound', () => {
       hint.style.display = 'block';
     });
 
-    // 失去 marker 隱藏提示文字
-    customMarker.addEventListener('markerLost', () => {
+    // 失去 marker 隱藏提示文字與影片
+    hiroMarker.addEventListener('markerLost', () => {
       hint.style.display = 'none';
-      ytPlayer.style.display = 'none'; // 影片隱藏
+      ytPlayer.style.display = 'none';
     });
 
     // 點擊按鈕播放影片
     playBtn.addEventListener('click', () => {
-      ytPlayer.style.display = 'block'; // 顯示影片
-      hint.style.display = 'none';       // 隱藏提示文字
+      ytPlayer.style.display = 'block';
+      hint.style.display = 'none';
     });
   </script>
 
