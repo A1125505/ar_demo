@@ -2,38 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Hiro Marker + YouTube 撥放</title>
+  <title>AR Hiro Marker + YouTube 自動播放</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin:0; overflow:hidden; font-family:sans-serif; }
-
-    /* 提示文字與影片容器 */
-    #hint {
-      position: fixed;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 20px;
-      color: #ffffff;
-      background: rgba(0,0,0,0.7);
-      padding: 15px 25px;
-      border-radius: 10px;
-      text-align: center;
-      z-index: 100;
-      display: none; /* 初始隱藏 */
-    }
-
-    #playBtn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 16px;
-      background-color: #ff0000;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
 
     iframe {
       position: fixed;
@@ -44,17 +17,11 @@
       height: 50%;
       border: none;
       display: none; /* 初始隱藏 */
-      z-index: 101;
+      z-index: 100;
     }
   </style>
 </head>
 <body>
-
-  <!-- 提示文字 + 按鈕 -->
-  <div id="hint">
-    這是一段敘述文字，請點擊下方播放影片<br>
-    <button id="playBtn">播放影片</button>
-  </div>
 
   <!-- YouTube 影片 iframe -->
   <iframe id="ytPlayer" 
@@ -62,39 +29,27 @@
           allow="autoplay; encrypted-media" allowfullscreen>
   </iframe>
 
-  <!-- A-Frame + AR.js -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+
     <!-- 內建 HIRO marker -->
     <a-marker preset="hiro" id="hiroMarker">
-      <!-- 可放 3D 物件作示意 -->
-      <a-box color="green" position="0 0.25 0"></a-box>
+      <!-- 移除任何 3D 物件 -->
     </a-marker>
+
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const hint = document.getElementById('hint');
-      const playBtn = document.getElementById('playBtn');
       const ytPlayer = document.getElementById('ytPlayer');
       const hiroMarker = document.getElementById('hiroMarker');
 
-      // 偵測到 HIRO marker 顯示文字
+      // 偵測到 HIRO marker → 顯示影片
       hiroMarker.addEventListener('markerFound', () => {
-        hint.style.display = 'block';
-      });
-
-      // 失去 marker 隱藏文字與影片
-      hiroMarker.addEventListener('markerLost', () => {
-        hint.style.display = 'none';
-        ytPlayer.style.display = 'none';
-      });
-
-      // 點擊按鈕播放影片
-      playBtn.addEventListener('click', () => {
         ytPlayer.style.display = 'block';
-        hint.style.display = 'none';
       });
+
+      // 不需要 markerLost，影片保持播放
     });
   </script>
 
