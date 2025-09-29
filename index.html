@@ -2,44 +2,80 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR.js Video Demo</title>
-  <!-- A-Frame (3D + DOM) -->
+  <title>AR QR + YouTube 範例</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <!-- AR.js for A-Frame -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-  <style> body { margin:0; overflow:hidden; } #playHint { position:fixed; left:0; right:0; bottom:20px; text-align:center; font-size:18px; }</style>
+  <style>
+    body { margin:0; overflow:hidden; font-family:sans-serif; }
+
+    #hint {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: #ffffff;
+      background: rgba(0,0,0,0.7);
+      padding: 20px 30px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 100;
+    }
+
+    #playBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    iframe {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      height: 50%;
+      border: none;
+      display: none;
+      z-index: 101;
+    }
+  </style>
 </head>
 <body>
-  <div id="playHint">先點一下畫面以允許影片播放（若影片未播放）。</div>
 
+  <!-- 提示文字 -->
+  <div id="hint">
+    請以正面對準設備<br>
+    <button id="playBtn">點擊播放影片</button>
+  </div>
+
+  <!-- YouTube 影片 -->
+  <iframe id="ytPlayer" src="https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  <!-- A-Frame + AR.js（可保留 marker 互動，但暫時不顯示影片） -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
-    <!-- 使用內建 HIRO marker (方便測試) -->
-    <a-marker preset="hiro">
-      <!-- 影片素材請放 assets/demo.mp4，下面示範把影片作為 plane (螢幕) -->
-      <a-video id="tutorialVideo" src="assets/demo.mp4" width="1.6" height="0.9" position="0 0.45 0" rotation="-90 0 0" autoplay="false" loop="true" playsinline="true"></a-video>
+    <a-marker preset="hiro" visible="false">
+      <a-box color="red" position="0 0.25 0"></a-box>
     </a-marker>
-
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    // 瀏覽器通常要求使用者互動後才能播放有聲音的影片
-    const hint = document.getElementById('playHint');
-    function initPlay() {
-      const videoEl = document.querySelector('#tutorialVideo').components.material.material.map.image;
-      // a-video 在 A-Frame 底層會建立一個 HTMLVideoElement 為 texture
-      if (videoEl && videoEl.play) {
-        videoEl.muted = false;    // 若要自動播放，可先設定 muted = true
-        videoEl.play().catch(e => {
-          console.log('video play error', e);
-        });
-      }
-      hint.style.display = 'none';
-      window.removeEventListener('touchstart', initPlay);
-      window.removeEventListener('click', initPlay);
-    }
-    window.addEventListener('touchstart', initPlay);
-    window.addEventListener('click', initPlay);
+    const hint = document.getElementById('hint');
+    const playBtn = document.getElementById('playBtn');
+    const ytPlayer = document.getElementById('ytPlayer');
+
+    // 點擊按鈕播放影片
+    playBtn.addEventListener('click', () => {
+      ytPlayer.style.display = 'block';  // 顯示影片
+      hint.style.display = 'none';       // 隱藏提示文字
+    });
   </script>
+
 </body>
 </html>
