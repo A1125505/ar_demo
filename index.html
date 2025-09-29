@@ -2,12 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Hiro Marker + YouTube 自動播放</title>
+  <title>AR Hiro Marker + YouTube</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin:0; overflow:hidden; font-family:sans-serif; }
 
+    /* YouTube 影片 iframe */
     iframe {
       position: fixed;
       top: 50%;
@@ -23,9 +24,9 @@
 </head>
 <body>
 
-  <!-- YouTube 影片 iframe -->
+  <!-- YouTube 影片 iframe，不自動播放 -->
   <iframe id="ytPlayer" 
-          src="https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1" 
+          src="https://www.youtube.com/embed/cci1yhDeOjs" 
           allow="autoplay; encrypted-media" allowfullscreen>
   </iframe>
 
@@ -33,7 +34,7 @@
 
     <!-- 內建 HIRO marker -->
     <a-marker preset="hiro" id="hiroMarker">
-      <!-- 移除任何 3D 物件 -->
+      <!-- 不放任何 3D 物件 -->
     </a-marker>
 
     <a-entity camera></a-entity>
@@ -49,7 +50,7 @@
         ytPlayer.style.display = 'block';
       });
 
-      // 不需要 markerLost，影片保持播放
+      // 不處理 markerLost → 移開後影片依然可見
     });
   </script>
 
