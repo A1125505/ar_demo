@@ -17,7 +17,7 @@
       max-width: 800px;
       background: #000;
       border-radius: 8px;
-      display: none; 
+      display: none;
       z-index: 100;
       padding: 0;
     }
@@ -56,7 +56,7 @@
   <div id="videoPopup" class="popup">
     <button class="closeBtn" onclick="closeVideo()">關閉</button>
     <iframe id="ytPlayer" 
-            src="https://www.youtube.com/embed/cci1yhDeOjs" 
+            src="" 
             allow="autoplay; encrypted-media" allowfullscreen>
     </iframe>
   </div>
@@ -76,25 +76,34 @@
   <script>
     const videoPopup = document.getElementById('videoPopup');
     const ytPlayer = document.getElementById('ytPlayer');
-    const kanjiMarker = document.getElementById('kanjiMarker');
+    const imagePopup = document.getElementById('imagePopup');
     const hiroMarker = document.getElementById('hiroMarker');
+    const kanjiMarker = document.getElementById('kanjiMarker');
+
+    // 檢查是否已有 popup 顯示
+    function isAnyPopupVisible() {
+      return videoPopup.style.display === 'block' || imagePopup.style.display === 'block';
+    }
 
     // 照到 HIRO marker → 顯示影片
     hiroMarker.addEventListener('markerFound', () => {
-      videoPopup.style.display = 'block';
-      // 設回 src 以確保影片可以播放
-      ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs";
+      if (!isAnyPopupVisible()) {
+        ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1"; // 設定 src
+        videoPopup.style.display = 'block';
+      }
     });
 
     // 照到 Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
-      document.getElementById('imagePopup').style.display = 'block';
+      if (!isAnyPopupVisible()) {
+        imagePopup.style.display = 'block';
+      }
     });
 
     // 關閉影片：隱藏視窗 + 停止播放
     function closeVideo() {
       videoPopup.style.display = 'none';
-      ytPlayer.src = "";  // 停止播放
+      ytPlayer.src = ""; // 清空 src 停止影片
     }
 
     // 關閉圖片
