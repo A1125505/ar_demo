@@ -8,7 +8,6 @@
   <style>
     body { margin:0; overflow:hidden; font-family:sans-serif; }
 
-    /* 公用的浮動視窗樣式 */
     .popup {
       position: fixed;
       top: 50%;
@@ -18,12 +17,11 @@
       max-width: 800px;
       background: #000;
       border-radius: 8px;
-      display: none; /* 初始隱藏 */
+      display: none; 
       z-index: 100;
       padding: 0;
     }
 
-    /* 關閉按鈕 */
     .closeBtn {
       position: absolute;
       top: 8px;
@@ -37,7 +35,6 @@
       z-index: 101;
     }
 
-    /* YouTube iframe */
     iframe {
       width: 100%;
       height: 400px;
@@ -45,7 +42,6 @@
       border-radius: 0 0 8px 8px;
     }
 
-    /* 圖片 */
     img {
       width: 100%;
       height: auto;
@@ -58,7 +54,7 @@
 
   <!-- YouTube 影片視窗 -->
   <div id="videoPopup" class="popup">
-    <button class="closeBtn" onclick="closePopup('videoPopup')">關閉</button>
+    <button class="closeBtn" onclick="closeVideo()">關閉</button>
     <iframe id="ytPlayer" 
             src="https://www.youtube.com/embed/cci1yhDeOjs" 
             allow="autoplay; encrypted-media" allowfullscreen>
@@ -71,34 +67,37 @@
     <img src="assets/test.jpg" alt="Test Image">
   </div>
 
-  <!-- A-Frame AR.js 場景 -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
-    <!-- 內建 HIRO marker → 觸發影片 -->
     <a-marker preset="hiro" id="hiroMarker"></a-marker>
-
-    <!-- 內建 Kanji marker → 觸發圖片 -->
     <a-marker preset="kanji" id="kanjiMarker"></a-marker>
-
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
     const videoPopup = document.getElementById('videoPopup');
-    const imagePopup = document.getElementById('imagePopup');
-    const hiroMarker = document.getElementById('hiroMarker');
+    const ytPlayer = document.getElementById('ytPlayer');
     const kanjiMarker = document.getElementById('kanjiMarker');
+    const hiroMarker = document.getElementById('hiroMarker');
 
     // 照到 HIRO marker → 顯示影片
     hiroMarker.addEventListener('markerFound', () => {
       videoPopup.style.display = 'block';
+      // 設回 src 以確保影片可以播放
+      ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs";
     });
 
     // 照到 Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
-      imagePopup.style.display = 'block';
+      document.getElementById('imagePopup').style.display = 'block';
     });
 
-    // 關閉視窗（影片或圖片）
+    // 關閉影片：隱藏視窗 + 停止播放
+    function closeVideo() {
+      videoPopup.style.display = 'none';
+      ytPlayer.src = "";  // 停止播放
+    }
+
+    // 關閉圖片
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
