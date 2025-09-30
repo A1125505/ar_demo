@@ -1,0 +1,14 @@
+[
+  {
+    "id": "hiro",
+    "type": "preset",
+    "contentType": "video",
+    "videoUrl": "https://www.youtube.com/embed/cci1yhDeOjs"
+  },
+  {
+    "id": "kanji",
+    "type": "preset",
+    "contentType": "image",
+    "imageFile": "assets/test.jpg"
+  }
+]
