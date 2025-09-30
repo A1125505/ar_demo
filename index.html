@@ -55,15 +55,12 @@
   <!-- YouTube 影片視窗 -->
   <div id="videoPopup" class="popup">
     <button class="closeBtn" onclick="closeVideo()">關閉</button>
-    <iframe id="ytPlayer" 
-            src="" 
-            allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
+    <iframe id="ytPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 
   <!-- 圖片視窗 -->
   <div id="imagePopup" class="popup">
-    <button class="closeBtn" onclick="closePopup('imagePopup')">關閉</button>
+    <button class="closeBtn" onclick="closeImage()">關閉</button>
     <img src="assets/test.jpg" alt="Test Image">
   </div>
 
@@ -80,35 +77,37 @@
     const hiroMarker = document.getElementById('hiroMarker');
     const kanjiMarker = document.getElementById('kanjiMarker');
 
-    // 檢查是否已有 popup 顯示
-    function isAnyPopupVisible() {
-      return videoPopup.style.display === 'block' || imagePopup.style.display === 'block';
-    }
+    // 全局旗標：是否有 popup 活動中
+    let popupActive = false;
 
     // 照到 HIRO marker → 顯示影片
     hiroMarker.addEventListener('markerFound', () => {
-      if (!isAnyPopupVisible()) {
-        ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1"; // 設定 src
+      if (!popupActive) {
+        ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1";
         videoPopup.style.display = 'block';
+        popupActive = true;
       }
     });
 
     // 照到 Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
-      if (!isAnyPopupVisible()) {
+      if (!popupActive) {
         imagePopup.style.display = 'block';
+        popupActive = true;
       }
     });
 
-    // 關閉影片：隱藏視窗 + 停止播放
+    // 關閉影片
     function closeVideo() {
       videoPopup.style.display = 'none';
-      ytPlayer.src = ""; // 清空 src 停止影片
+      ytPlayer.src = ""; // 停止播放
+      popupActive = false;
     }
 
     // 關閉圖片
-    function closePopup(id) {
-      document.getElementById(id).style.display = 'none';
+    function closeImage() {
+      imagePopup.style.display = 'none';
+      popupActive = false;
     }
   </script>
 
