@@ -52,7 +52,7 @@
 </head>
 <body>
 
-  <!-- 影片視窗 -->
+  <!-- YouTube 影片視窗 -->
   <div id="videoPopup" class="popup">
     <button class="closeBtn" onclick="closeVideo()">關閉</button>
     <iframe id="ytPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -64,7 +64,6 @@
     <img src="assets/test.jpg" alt="Test Image">
   </div>
 
-  <!-- AR.js 場景 -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
     <a-marker preset="hiro" id="hiroMarker"></a-marker>
     <a-marker preset="kanji" id="kanjiMarker"></a-marker>
@@ -78,10 +77,10 @@
     const hiroMarker = document.getElementById('hiroMarker');
     const kanjiMarker = document.getElementById('kanjiMarker');
 
-    // 標記是否有 popup 活動中
+    // 全局旗標：是否有 popup 活動中
     let popupActive = false;
 
-    // 掃到 HIRO marker → 播放影片
+    // 照到 HIRO marker → 顯示影片
     hiroMarker.addEventListener('markerFound', () => {
       if (!popupActive) {
         ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1";
@@ -90,7 +89,7 @@
       }
     });
 
-    // 掃到 Kanji marker → 顯示圖片
+    // 照到 Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
       if (!popupActive) {
         imagePopup.style.display = 'block';
@@ -101,7 +100,7 @@
     // 關閉影片
     function closeVideo() {
       videoPopup.style.display = 'none';
-      ytPlayer.src = ""; // 停止影片
+      ytPlayer.src = ""; // 停止播放
       popupActive = false;
     }
 
