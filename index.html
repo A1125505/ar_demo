@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Hiro + Kanji Marker Popup</title>
+  <title>AR Multiple Marker Popup</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
@@ -52,61 +52,89 @@
 </head>
 <body>
 
-  <!-- YouTube 影片視窗 -->
-  <div id="videoPopup" class="popup">
-    <button class="closeBtn" onclick="closeVideo()">關閉</button>
-    <iframe id="ytPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <!-- HIRO 影片視窗 -->
+  <div id="hiroVideoPopup" class="popup">
+    <button class="closeBtn" onclick="closeVideo('hiroVideoPopup', 'hiroPlayer')">關閉</button>
+    <iframe id="hiroPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 
-  <!-- 圖片視窗 -->
-  <div id="imagePopup" class="popup">
+  <!-- 自訂 marker 影片視窗 -->
+  <div id="customVideoPopup" class="popup">
+    <button class="closeBtn" onclick="closeVideo('customVideoPopup', 'customPlayer')">關閉</button>
+    <iframe id="customPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+
+  <!-- Kanji 圖片視窗 -->
+  <div id="kanjiPopup" class="popup">
     <button class="closeBtn" onclick="closeImage()">關閉</button>
-    <img src="assets/test.jpg" alt="Test Image">
+    <img src="assets/test.jpg" alt="Kanji Image">
   </div>
 
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+
+    <!-- HIRO marker -->
     <a-marker preset="hiro" id="hiroMarker"></a-marker>
+
+    <!-- Kanji marker -->
     <a-marker preset="kanji" id="kanjiMarker"></a-marker>
+
+    <!-- 自訂 marker -->
+    <a-marker type="pattern" url="assets/mymarker.patt" id="customMarker"></a-marker>
+
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    const videoPopup = document.getElementById('videoPopup');
-    const ytPlayer = document.getElementById('ytPlayer');
-    const imagePopup = document.getElementById('imagePopup');
-    const hiroMarker = document.getElementById('hiroMarker');
-    const kanjiMarker = document.getElementById('kanjiMarker');
-
-    // 全局旗標：是否有 popup 活動中
     let popupActive = false;
 
-    // 照到 HIRO marker → 顯示影片
+    const hiroMarker = document.getElementById('hiroMarker');
+    const kanjiMarker = document.getElementById('kanjiMarker');
+    const customMarker = document.getElementById('customMarker');
+
+    const hiroVideoPopup = document.getElementById('hiroVideoPopup');
+    const hiroPlayer = document.getElementById('hiroPlayer');
+
+    const customVideoPopup = document.getElementById('customVideoPopup');
+    const customPlayer = document.getElementById('customPlayer');
+
+    const kanjiPopup = document.getElementById('kanjiPopup');
+
+    // HIRO marker → 播放影片
     hiroMarker.addEventListener('markerFound', () => {
       if (!popupActive) {
-        ytPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1";
-        videoPopup.style.display = 'block';
+        hiroPlayer.src = "https://www.youtube.com/embed/cci1yhDeOjs?autoplay=1";
+        hiroVideoPopup.style.display = 'block';
         popupActive = true;
       }
     });
 
-    // 照到 Kanji marker → 顯示圖片
+    // Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
       if (!popupActive) {
-        imagePopup.style.display = 'block';
+        kanjiPopup.style.display = 'block';
+        popupActive = true;
+      }
+    });
+
+    // 自訂 marker → 播放影片
+    customMarker.addEventListener('markerFound', () => {
+      if (!popupActive) {
+        customPlayer.src = "https://www.youtube.com/embed/r60oS7odiJY?autoplay=1";
+        customVideoPopup.style.display = 'block';
         popupActive = true;
       }
     });
 
     // 關閉影片
-    function closeVideo() {
-      videoPopup.style.display = 'none';
-      ytPlayer.src = ""; // 停止播放
+    function closeVideo(popupId, playerId) {
+      document.getElementById(popupId).style.display = 'none';
+      document.getElementById(playerId).src = "";
       popupActive = false;
     }
 
     // 關閉圖片
     function closeImage() {
-      imagePopup.style.display = 'none';
+      kanjiPopup.style.display = 'none';
       popupActive = false;
     }
   </script>
