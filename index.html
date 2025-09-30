@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Hiro + Kanji Marker</title>
+  <title>AR Hiro + Kanji Marker Popup</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
@@ -23,6 +23,7 @@
       padding: 0;
     }
 
+    /* 關閉按鈕 */
     .closeBtn {
       position: absolute;
       top: 8px;
@@ -36,6 +37,7 @@
       z-index: 101;
     }
 
+    /* YouTube iframe */
     iframe {
       width: 100%;
       height: 400px;
@@ -43,6 +45,7 @@
       border-radius: 0 0 8px 8px;
     }
 
+    /* 圖片 */
     img {
       width: 100%;
       height: auto;
@@ -73,7 +76,7 @@
     <!-- 內建 HIRO marker → 觸發影片 -->
     <a-marker preset="hiro" id="hiroMarker"></a-marker>
 
-    <!-- 改成內建 KANJI marker → 觸發圖片 -->
+    <!-- 內建 Kanji marker → 觸發圖片 -->
     <a-marker preset="kanji" id="kanjiMarker"></a-marker>
 
     <a-entity camera></a-entity>
@@ -90,12 +93,12 @@
       videoPopup.style.display = 'block';
     });
 
-    // 照到 KANJI marker → 顯示圖片
+    // 照到 Kanji marker → 顯示圖片
     kanjiMarker.addEventListener('markerFound', () => {
       imagePopup.style.display = 'block';
     });
 
-    // 關閉視窗
+    // 關閉視窗（影片或圖片）
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
