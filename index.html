@@ -2,56 +2,103 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Hiro Marker + YouTube</title>
+  <title>AR Hiro + Kanji Marker</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin:0; overflow:hidden; font-family:sans-serif; }
 
-    /* YouTube 影片 iframe */
-    iframe {
+    /* 公用的浮動視窗樣式 */
+    .popup {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 90%;
-      height: 50%;
-      border: none;
+      max-width: 800px;
+      background: #000;
+      border-radius: 8px;
       display: none; /* 初始隱藏 */
       z-index: 100;
+      padding: 0;
+    }
+
+    .closeBtn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: red;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 0 0 8px 8px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 0 0 8px 8px;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <!-- YouTube 影片 iframe，不自動播放 -->
-  <iframe id="ytPlayer" 
-          src="https://www.youtube.com/embed/cci1yhDeOjs" 
-          allow="autoplay; encrypted-media" allowfullscreen>
-  </iframe>
+  <!-- YouTube 影片視窗 -->
+  <div id="videoPopup" class="popup">
+    <button class="closeBtn" onclick="closePopup('videoPopup')">關閉</button>
+    <iframe id="ytPlayer" 
+            src="https://www.youtube.com/embed/cci1yhDeOjs" 
+            allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+  </div>
 
+  <!-- 圖片視窗 -->
+  <div id="imagePopup" class="popup">
+    <button class="closeBtn" onclick="closePopup('imagePopup')">關閉</button>
+    <img src="assets/test.jpg" alt="Test Image">
+  </div>
+
+  <!-- A-Frame AR.js 場景 -->
   <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+    <!-- 內建 HIRO marker → 觸發影片 -->
+    <a-marker preset="hiro" id="hiroMarker"></a-marker>
 
-    <!-- 內建 HIRO marker -->
-    <a-marker preset="hiro" id="hiroMarker">
-      <!-- 不放任何 3D 物件 -->
-    </a-marker>
+    <!-- 改成內建 KANJI marker → 觸發圖片 -->
+    <a-marker preset="kanji" id="kanjiMarker"></a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const ytPlayer = document.getElementById('ytPlayer');
-      const hiroMarker = document.getElementById('hiroMarker');
+    const videoPopup = document.getElementById('videoPopup');
+    const imagePopup = document.getElementById('imagePopup');
+    const hiroMarker = document.getElementById('hiroMarker');
+    const kanjiMarker = document.getElementById('kanjiMarker');
 
-      // 偵測到 HIRO marker → 顯示影片
-      hiroMarker.addEventListener('markerFound', () => {
-        ytPlayer.style.display = 'block';
-      });
-
-      // 不處理 markerLost → 移開後影片依然可見
+    // 照到 HIRO marker → 顯示影片
+    hiroMarker.addEventListener('markerFound', () => {
+      videoPopup.style.display = 'block';
     });
+
+    // 照到 KANJI marker → 顯示圖片
+    kanjiMarker.addEventListener('markerFound', () => {
+      imagePopup.style.display = 'block';
+    });
+
+    // 關閉視窗
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
   </script>
 
 </body>
